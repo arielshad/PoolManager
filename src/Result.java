@@ -1,7 +1,7 @@
 
 public class Result{
 	private double sum;
-	private boolean finshed;
+
 	private int resultsCounter;
 	private int default_n;
 	private String exp_type;
@@ -12,6 +12,15 @@ public class Result{
 		this.setSum(sum);
 		this.default_n = default_n;
 		this.exp_type = exp_type;
+	}
+	
+	
+	private synchronized int getResultCounter(){
+		if (resultsCounter == 0) {
+			resultsCounter = resultsCounter-1;
+			return 0;
+		}
+		return this.resultsCounter;
 	}
 	
 	public void addNum(double num){
@@ -30,19 +39,6 @@ public class Result{
 		}
 	}
 
-	public boolean isFinshed() {
-		synchronized (this) {
-			if(resultsCounter == 0){
-				
-			}
-			return finshed;	
-		}
-		
-	}
-
-	public synchronized void setFinshed(boolean finshed) {
-		this.finshed = finshed;
-	}
 
 	public synchronized double getSum() {
 		return sum;
@@ -53,7 +49,7 @@ public class Result{
 	}
 	
 	public synchronized void report(){
-		if (resultsCounter == 0) {
+		if (getResultCounter() == 0) {
 			if (exp_type.contains("1.1")) {
 				System.out.println("Expr. type " + exp_type +", n = " + default_n + ": "+sum);
 			}else{

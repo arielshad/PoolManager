@@ -8,7 +8,69 @@ import org.omg.CORBA.NVList;
 
 public class User {
 
+	public static void solutionAriel(ArrayList<Integer> n_vals,  ArrayList<Integer> l_vals, int task_limit, int threads_limit, int summon_limit, int multiplay_limit){
+		// set pool maneger
+		PoolManeger poolManeger = PoolManeger.getInstace(task_limit, threads_limit);
+		// turn pool manger on!
+		poolManeger.start();		
+		
+		try {
+			poolManeger.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < n_vals.size(); i++) {
+			//get n val for expression
+			int temp_nVal = n_vals.get(i);
+			
+			//create array of tasks
+			ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
+			
+			//create the result object
+			Result result = new Result(1, (int)Math.ceil(temp_nVal/multiplay_limit), temp_nVal, "1.1");
+			
+//			taskArray = taskArrayCreator();
+			
+			
+		}
+		
+		
+		
+		
+	}
 	
+	@SuppressWarnings("unused")
+	private static ArrayList<Callable<Result>> taskArrayCreator(TaskObject task, int nVal, int limiter, Result result, ExpressionType type) throws InstantiationException, IllegalAccessException {
+		ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
+		
+		while(nVal-limiter>0){
+			TaskObject temp = task.getClass().newInstance();
+			
+			temp.setFrom(nVal-limiter);
+			temp.setFrom(nVal);
+			temp.setResult(result);
+			temp.setType(type);
+			
+			taskArray.add(temp);
+			
+			
+			nVal-=limiter;
+		}
+		//after loop create the extra move
+		TaskObject temp = task.getClass().newInstance();
+		temp.setFrom(1);
+		temp.setFrom(nVal);
+		temp.setResult(result);
+		temp.setType(type);
+		taskArray.add(temp);
+		
+		
+		return taskArray;
+		
+		
+	}
+
 	/**
 	 * Solution.
 	 *
@@ -24,7 +86,6 @@ public class User {
 	 */
 	public static void solution(int k, int r, ArrayList<Integer> n_vals,  ArrayList<Integer> l_vals, ArrayList<Integer> m_vals, int t, int s, int m, int p){
 		//set pool maneger
-		int need_task = 0;
 		PoolManeger poolManeger = PoolManeger.getInstace(t, p);
 		//turn pool manger on!
 		poolManeger.start();
@@ -37,13 +98,18 @@ public class User {
 			int temp_nVal = n_vals.get(i);
 			ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
 			
-			Result result = new Result(1, (int)Math.ceil(temp_nVal/m), temp_nVal, "1.1");
+			int numOfTasks = (int)Math.ceil(temp_nVal/(double)m);
+			Result result = new Result(1, numOfTasks, temp_nVal, "1.1");
+			
 			//create tasks
 			while(temp_nVal-m>0){
-				taskArray.add(new Task1(temp_nVal-m, temp_nVal-m, result));
-				temp_nVal-=m;
+				taskArray.add(new Task1(temp_nVal-m+1, temp_nVal, result, ExpressionType.MUL));
+				temp_nVal-=m;				
 			}
-			taskArray.add(new Task1(1, temp_nVal, result));
+			if (temp_nVal!=0) {
+				taskArray.add(new Task1(1, temp_nVal, result, ExpressionType.MUL));
+			}
+			
 			
 			//now start feeder for each task
 			for (int j = 0; j < taskArray.size(); j++) {
@@ -53,36 +119,6 @@ public class User {
 		}
 		
 		
-		for (int i = 0; i < r; i++) {
-			int temp_l_val = l_vals.get(i);
-			int temp_m_val = m_vals.get(i);
-			int numOfNeededThreads = (int)Math.ceil(temp_l_val/m);
-			
-			numOfNeededThreads+=(int)Math.ceil(temp_m_val/s);
-			
-			ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
-			Result result = new Result(1, numOfNeededThreads, temp_l_val, "1.2");
-			
-			while(temp_l_val-m>0){
-				taskArray.add(new Task2(temp_l_val-m, temp_l_val-m, result));
-				temp_l_val-=m;
-			}
-			taskArray.add(new Task2(1, temp_l_val, result));
-			
-			
-			while(temp_m_val-s>0){
-				taskArray.add(new Task3(temp_m_val-s, temp_m_val-s, result));
-				temp_m_val-=s;
-			}
-			taskArray.add(new Task3(1, temp_m_val, result));
-			
-			//now start feeder for each task
-			for (int j = 0; j < taskArray.size(); j++) {
-				Feeder feed = new Feeder(poolManeger, taskArray.get(j));
-				feed.start();				
-			}
-			
-		}
 
 		
 		
@@ -90,76 +126,30 @@ public class User {
 	
 	public static void main(String[] args) {
 		//set pool maneger
-		ArrayList<Integer> nvals = new ArrayList<>();
-		nvals.add(20);
-		nvals.add(10);
+		ArrayList<Integer> n_vals = new ArrayList<>();
+		n_vals.add(20);
+//		n_vals.add(10);
 		
-		ArrayList<Integer> lvals = new ArrayList<>();
-		lvals.add(2);
-		lvals.add(2);
-		
-		
-		ArrayList<Integer> mvals = new ArrayList<>();
-		mvals.add(2);
-		mvals.add(2);
-		
-		solution(2, 2, nvals, lvals, mvals, 4, 1, 2, 10);
-		
-		/*
-		PoolManeger poolManeger = PoolManeger.getInstace(1, 1);
-		
-		poolManeger.start();
+		ArrayList<Integer> l_vals = new ArrayList<>();
+		l_vals.add(2);
+		l_vals.add(2);
 
-
-		for (int i = 0; i < 4; i++) {
-//			poolManeger.addTask(task);
-			
-		}
-		
-		try {
-			poolManeger.join();
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		
-		
-	}
-
-}
-
-//tester
-class Ex1 implements Callable<Double>{
-	private int from;
-	private int to;
-
-	@Override
-	public Double call() throws Exception {
-		
-		Thread.sleep(1000);
-		System.out.println("finished thread!!");
-		return 0.0;
-	}
-
-	public int getFrom() {
-		return from;
-	}
-
-	public void setFrom(int from) {
-		this.from = from;
-	}
-
-	public int getTo() {
-		return to;
-	}
-
-	public void setTo(int to) {
-		this.to = to;
-	}
+		//7.625979004892141E-26
+		solution(1, 1, n_vals, l_vals, l_vals, 4, 1, 2, 10);
 	
+		int task_limit=4;
+		int threads_limit=5;
+		int summon_limit=2;
+		int multiplay_limit=3;
+		
+//		solutionAriel(n_vals, l_vals, task_limit, threads_limit, summon_limit, multiplay_limit);
+	
+		
+		
+	}
+
 }
+
 
 
 
