@@ -1,8 +1,20 @@
 public class ArielTest {
 	public static void main(String[] args) {
 		double sum = 1;
-		for (int i = 1; i <= 20; i++) {
+		/*for (int i = 1; i <= 20; i++) {
 			sum *= ( Math.pow(-1, i) / ( 2*i+1 ) );
+		}*
+		/
+		 * 1.5861360575696473
+		 * 1.586136057569647
+		 */
+		
+		for (int i = 1; i <= 20; i++) {
+			sum*= (Math.pow(-1, 3*i) / (2*(i+1)+1));
+		}
+		
+		for (int i = 1; i <= 20; i++) {
+			sum+=i/(2*Math.pow(i, 2)+1);
 		}
 /*
  * Expr. type 1.1, n = 10: -7.313315179042153E-15

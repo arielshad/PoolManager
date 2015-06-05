@@ -14,6 +14,10 @@ public class Result{
 		this.exp_type = exp_type;
 	}
 	
+	public synchronized int currentResult(){
+		return resultsCounter;
+	}
+	
 	
 	private synchronized int getResultCounter(){
 		if (resultsCounter == 0) {
@@ -25,6 +29,7 @@ public class Result{
 	
 	public void addNum(double num){
 		synchronized (this) {
+			
 			sum+=num;
 			resultsCounter--;	
 		}
@@ -34,6 +39,7 @@ public class Result{
 
 	public void mulNum(double num){
 		synchronized (this) {
+			
 			sum*=num;
 			resultsCounter--;
 		}

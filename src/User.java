@@ -1,8 +1,8 @@
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-import org.omg.CORBA.NVList;
+
 
 
 
@@ -70,6 +70,88 @@ public class User {
 		
 		
 	}
+	
+	
+	public static void runTask11(int k, ArrayList<Integer> n_vals, int m, PoolManeger poolManeger){
+		for (int i = 0; i < k; i++) {
+			//get current n_val;
+			int temp_nVal = n_vals.get(i);
+			ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
+			
+			int numOfTasks = (int)Math.ceil(temp_nVal/(double)m);
+			Result result = new Result(1, numOfTasks, temp_nVal, "1.1");
+			
+			//create tasks
+			while(temp_nVal-m>0){
+				taskArray.add(new Task1(temp_nVal-m+1, temp_nVal, result, ExpressionType.MUL));
+				temp_nVal-=m;				
+			}
+			if (temp_nVal!=0) {
+				taskArray.add(new Task1(1, temp_nVal, result, ExpressionType.MUL));
+			}			
+			
+			//now start feeder for each task
+			for (int j = 0; j < taskArray.size(); j++) {
+				Feeder feed = new Feeder(poolManeger, taskArray.get(j));
+				feed.start();				
+			}
+		}
+	}
+	
+	public static void runTask12(int r, ArrayList<Integer> l_vals, int m, int s, PoolManeger poolManeger){
+		for (int i = 0; i < r; i++) {
+			//get current n_val;
+			int temp_nVal = l_vals.get(i);
+			ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
+			
+			int numOfTasks = (int)Math.ceil(temp_nVal/(double)m);
+			int numOfTasksSum = (int)Math.ceil(temp_nVal/(double)s);
+			System.out.println("mul task "+numOfTasks+" sum task "+numOfTasksSum);
+			Result result = new Result(1, numOfTasks+numOfTasksSum, temp_nVal, "1.2");
+			
+			//create tasks
+			while(temp_nVal-m>0){
+				taskArray.add(new Task2(temp_nVal-m+1, temp_nVal, result, ExpressionType.MUL));
+				temp_nVal-=m;				
+			}
+			if (temp_nVal!=0) {
+				taskArray.add(new Task2(1, temp_nVal, result, ExpressionType.MUL));
+			}			
+			
+			//now start feeder for each task
+			for (int j = 0; j < taskArray.size(); j++) {
+				Feeder feed = new Feeder(poolManeger, taskArray.get(j));
+				feed.start();				
+			}
+			
+			//this thread needs to wait before starting second part
+			while (result.currentResult()>numOfTasksSum);
+			
+			//second part
+			//create tasks
+			taskArray.clear();
+			
+			temp_nVal = l_vals.get(i);
+			while(temp_nVal-s>0){
+				taskArray.add(new Task3(temp_nVal-s+1, temp_nVal, result, ExpressionType.SUM));
+				temp_nVal-=s;				
+			}
+			if (temp_nVal!=0) {
+				taskArray.add(new Task3(1, temp_nVal, result, ExpressionType.SUM));
+			}			
+			
+			//now start feeder for each task
+			for (int j = 0; j < taskArray.size(); j++) {
+				Feeder feed = new Feeder(poolManeger, taskArray.get(j));
+				feed.start();				
+			}
+			
+			
+			
+			
+			
+		}
+	}
 
 	/**
 	 * Solution.
@@ -93,30 +175,9 @@ public class User {
 		//start feeding
 		//expression 1.1
 		//for each n_val
-		for (int i = 0; i < k; i++) {
-			//get current n_val;
-			int temp_nVal = n_vals.get(i);
-			ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
-			
-			int numOfTasks = (int)Math.ceil(temp_nVal/(double)m);
-			Result result = new Result(1, numOfTasks, temp_nVal, "1.1");
-			
-			//create tasks
-			while(temp_nVal-m>0){
-				taskArray.add(new Task1(temp_nVal-m+1, temp_nVal, result, ExpressionType.MUL));
-				temp_nVal-=m;				
-			}
-			if (temp_nVal!=0) {
-				taskArray.add(new Task1(1, temp_nVal, result, ExpressionType.MUL));
-			}
-			
-			
-			//now start feeder for each task
-			for (int j = 0; j < taskArray.size(); j++) {
-				Feeder feed = new Feeder(poolManeger, taskArray.get(j));
-				feed.start();				
-			}
-		}
+		runTask11(k,n_vals,m, poolManeger);
+		runTask12(r, n_vals, m,s,poolManeger);
+		
 		
 		
 
@@ -135,7 +196,7 @@ public class User {
 		l_vals.add(2);
 
 		//7.625979004892141E-26
-		solution(1, 1, n_vals, l_vals, l_vals, 4, 1, 2, 10);
+		solution(1, 1, n_vals, l_vals, l_vals, 4, 2, 2, 10);
 	
 		int task_limit=4;
 		int threads_limit=5;

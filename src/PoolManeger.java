@@ -10,10 +10,10 @@ public class PoolManeger extends Thread{
 	private int numOfThread = 10;
 	private int maxSizeOfTaskQueue = Integer.MAX_VALUE;
 	private Object lock = new Object();
-	private Lock reLock = new ReentrantLock();
+
 	
 	private BlockingQueue<PoolThread> threads_queue; //available threads
-	private BlockingQueue<PoolThread> running_threads_queue; // not available threads
+
 	private BlockingQueue<Callable<Result>> task_queue; // waiting tasks
 	
 	
@@ -68,7 +68,6 @@ public class PoolManeger extends Thread{
 			threads_queue = new BlockingQueue<PoolThread>(numOfThread);
 //			System.out.println("print after init thread queue");
 			
-			running_threads_queue = new BlockingQueue<PoolThread>(numOfThread);
 			task_queue = new BlockingQueue<Callable<Result>>(maxSizeOfTaskQueue);
 			
 			//create threads

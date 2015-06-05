@@ -6,12 +6,14 @@ public class Task2 implements Callable<Result>{
 	private int from;
 	private int to;
 	private Result result;
+	private ExpressionType type = ExpressionType.MUL;
 
-	Task2(int from, int to, Result result){
+	Task2(int from, int to, Result result, ExpressionType type){
 		this.from=from;
 		this.to = to;
 		this.sum=1;
 		this.result = result;
+		this.type = type;
 	}
 
 	public double getSum(){
@@ -25,12 +27,23 @@ public class Task2 implements Callable<Result>{
 
 		// Multiplay form (1.2)
 		for (int i = from; i <= to; i++) {
-			sum*= ((-1)^3*i) / (2*(i+1)+1);
+			sum*= (Math.pow(-1, 3*i) / (2*(i+1)+1));
 		}
+//		System.out.println(sum);
 
 		
-		result.mulNum(sum);
+		this.addAnswer();
 		return result;
+	}
+	
+	private void addAnswer() {
+		if (type == ExpressionType.MUL) {
+			result.mulNum(sum);
+		}else{
+			result.addNum(sum);
+		}
+		
+		
 	}
 
 }

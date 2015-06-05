@@ -25,21 +25,17 @@ public class Task1 implements Callable<Result>{
 	@Override
 	public Result call() throws Exception {
 		// Multiplay form (1.1)
-		
-		
+
 		for (int i = from; i <= to; i++) {
 			sum *= ( Math.pow(-1, i) / ( 2*i+1 ) );
 			
 		}
-		
-//		System.out.println("from: "+from+" to: "+to+" result: "+sum);
-		
-		
-		this.addAnswer(sum);
+
+		this.addAnswer();
 		return result;
 	}
 
-	private void addAnswer(double sum2) {
+	private void addAnswer() {
 		if (type == ExpressionType.MUL) {
 			result.mulNum(sum);
 		}else{
