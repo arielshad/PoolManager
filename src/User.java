@@ -106,7 +106,7 @@ public class User {
 			
 			int numOfTasks = (int)Math.ceil(temp_nVal/(double)m);
 			int numOfTasksSum = (int)Math.ceil(temp_nVal/(double)s);
-			System.out.println("mul task "+numOfTasks+" sum task "+numOfTasksSum);
+			
 			Result result = new Result(1, numOfTasks+numOfTasksSum, temp_nVal, "1.2");
 			
 			//create tasks
@@ -176,7 +176,7 @@ public class User {
 		//expression 1.1
 		//for each n_val
 		runTask11(k,n_vals,m, poolManeger);
-		runTask12(r, n_vals, m,s,poolManeger);
+		runTask12(r, l_vals, m,s,poolManeger);
 		
 		
 		
@@ -189,14 +189,14 @@ public class User {
 		//set pool maneger
 		ArrayList<Integer> n_vals = new ArrayList<>();
 		n_vals.add(20);
-//		n_vals.add(10);
+		n_vals.add(10);
 		
 		ArrayList<Integer> l_vals = new ArrayList<>();
 		l_vals.add(2);
-		l_vals.add(2);
+		l_vals.add(9);
 
 		//7.625979004892141E-26
-		solution(1, 1, n_vals, l_vals, l_vals, 4, 2, 2, 10);
+		solution(2, 2, n_vals, l_vals, l_vals, 4, 2, 6, 3);
 	
 		int task_limit=4;
 		int threads_limit=5;
