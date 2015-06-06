@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 
@@ -7,7 +8,7 @@ import java.util.concurrent.Callable;
 
 
 public class User {
-
+/*
 	public static void solutionAriel(ArrayList<Integer> n_vals,  ArrayList<Integer> l_vals, int task_limit, int threads_limit, int summon_limit, int multiplay_limit){
 		// set pool maneger
 		PoolManeger poolManeger = PoolManeger.getInstace(task_limit, threads_limit);
@@ -39,7 +40,7 @@ public class User {
 		
 		
 	}
-	
+	*/
 	@SuppressWarnings("unused")
 	private static ArrayList<Callable<Result>> taskArrayCreator(TaskObject task, int nVal, int limiter, Result result, ExpressionType type) throws InstantiationException, IllegalAccessException {
 		ArrayList<Callable<Result>> taskArray  =new ArrayList<Callable<Result>>();
@@ -188,20 +189,20 @@ public class User {
 	public static void main(String[] args) {
 		//set pool maneger
 		ArrayList<Integer> n_vals = new ArrayList<>();
-		n_vals.add(20);
-		n_vals.add(10);
+		n_vals.addAll(
+				Arrays.asList(20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10)
+				);
+//		n_vals.add(20);
+//		n_vals.add(10);
 		
 		ArrayList<Integer> l_vals = new ArrayList<>();
-		l_vals.add(2);
-		l_vals.add(9);
+		l_vals.addAll(
+				Arrays.asList(20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10, 20, 10)
+				);
 
 		//7.625979004892141E-26
-		solution(2, 2, n_vals, l_vals, l_vals, 4, 2, 6, 3);
+		solution(n_vals.size(), l_vals.size(), n_vals, l_vals, l_vals, 500, 3, 3, 5);
 	
-		int task_limit=4;
-		int threads_limit=5;
-		int summon_limit=2;
-		int multiplay_limit=3;
 		
 //		solutionAriel(n_vals, l_vals, task_limit, threads_limit, summon_limit, multiplay_limit);
 	

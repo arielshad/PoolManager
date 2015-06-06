@@ -45,6 +45,7 @@ public class PoolThread extends Thread{
 				
 				try {
 					//now we have a task, lets inesrt it into futureTask and w8 for result
+					@SuppressWarnings("unchecked")
 					FutureTask<Result> futureTask = new FutureTask<Result>((Callable<Result>) taskQueue.remove());
 					futureTask.run();
 					Result temp = futureTask.get();

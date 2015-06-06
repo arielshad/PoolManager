@@ -1,6 +1,4 @@
 import java.util.concurrent.Callable;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 //the singelton design pattern to prevent of creating more then 1 pool maneger
 public class PoolManeger extends Thread{
@@ -119,6 +117,7 @@ public class PoolManeger extends Thread{
 					
 					//pop task	
 //					System.out.println("--try to remove task from queue: "+task_queue.size());
+					@SuppressWarnings("unchecked")
 					Callable<Result> task = (Callable<Result>) task_queue.remove();
 //					System.out.println("--AFTER try to remove task from queue: "+task_queue.size());
 										
